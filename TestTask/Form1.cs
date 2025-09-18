@@ -45,7 +45,7 @@ namespace TestTask
             {
                 string directory = Path.GetDirectoryName(selectedXmlFilePath);
                 string xsltPath = Path.Combine(directory, "transform.xsl");
-                string resultPath = Path.Combine(directory, "result.xml");
+                string resultPath = Path.Combine(directory, "result.xml");                
 
                 if (!File.Exists(xsltPath))
                 {
@@ -62,7 +62,7 @@ namespace TestTask
                     xslt.Transform(selectedXmlFilePath, writer);
                 }
 
-                // Загружаем полученный XML и добавляем <total>
+                // Загружаем полученный XML и добавляем атрибут total
                 XDocument doc = XDocument.Load(resultPath);
 
                 var employees = doc.Root?.Elements("Employee");
@@ -95,6 +95,42 @@ namespace TestTask
 
                 // Сохраняем обновлённый XML
                 doc.Save(resultPath);
+
+
+                // добавим атрибут total в исходный файл Data
+
+                XDocument doc2 = XDocument.Load(selectedXmlFilePath);
+
+                // Получаем корневой элемент <Pay>
+                var pay = doc2.Root;
+
+                if (pay != null && pay.Name.LocalName == "Pay")
+                {
+                    decimal total = 0;
+
+                    var items = pay.Elements("item");
+                    foreach (var item in items)
+                    {
+                        string amountStr = item.Attribute("amount")?.Value;
+                        if (!string.IsNullOrEmpty(amountStr))
+                        {
+                            // Заменяем запятую на точку для корректного парсинга
+                            amountStr = amountStr.Trim().Replace(" ", "").Replace(',', '.');
+                            if (decimal.TryParse(amountStr, System.Globalization.NumberStyles.Float,
+                                System.Globalization.CultureInfo.InvariantCulture, out decimal amount))
+                            {
+                                total += amount;
+                            }
+                        }
+                    }
+
+                    // Добавляем атрибут total с суммой
+                    pay.SetAttributeValue("total", total.ToString("0.00").Replace(',', '.'));
+
+                    // Сохраняем обновлённый XML
+                    doc2.Save(selectedXmlFilePath);
+                }
+
 
                 MessageBox.Show($"Преобразование завершено. Результат сохранён в:\n{resultPath}", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
