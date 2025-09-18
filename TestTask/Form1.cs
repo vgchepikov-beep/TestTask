@@ -1,9 +1,10 @@
 using System;
+using System.Data;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
-using System.Xml.Xsl;
 using System.Xml.Linq;
+using System.Xml.Xsl;
 
 
 namespace TestTask
@@ -95,6 +96,47 @@ namespace TestTask
 
                 // Сохраняем обновлённый XML
                 doc.Save(resultPath);
+
+
+                // Отобразим полученный xml в таблице
+
+                var dataTable = new DataTable();
+                dataTable.Columns.Add("Name", typeof(string));
+                dataTable.Columns.Add("Surname", typeof(string));
+                dataTable.Columns.Add("Amount", typeof(decimal));
+                dataTable.Columns.Add("Month", typeof(string));
+
+                // Обходим всех Employee
+                foreach (var employee in doc.Root?.Elements("Employee") ?? Enumerable.Empty<XElement>())
+                {
+                    string name = employee.Attribute("name")?.Value ?? "";
+                    string surname = employee.Attribute("surname")?.Value ?? "";
+
+                    // Обходим все salary внутри Employee
+                    foreach (var salary in employee.Elements("salary"))
+                    {
+                        string amountStr = salary.Attribute("amount")?.Value;
+                        string month = salary.Attribute("mount")?.Value ?? "";
+
+                        if (!string.IsNullOrEmpty(amountStr))
+                        {
+                            // Нормализуем формат числа
+                            amountStr = amountStr.Replace(',', '.');
+                            if (decimal.TryParse(amountStr, System.Globalization.NumberStyles.Float,
+                                System.Globalization.CultureInfo.InvariantCulture, out decimal amount))
+                            {
+                                dataTable.Rows.Add(name, surname, amount, month);
+                            }
+                        }
+                    }
+                }
+
+                // Привязываем к DataGrid
+                dataGridView1.DataSource = dataTable;
+
+                //конец работы с таблицей
+
+
 
 
                 // добавим атрибут total в исходный файл Data
