@@ -46,7 +46,7 @@ namespace TestTask
             {
                 string directory = Path.GetDirectoryName(selectedXmlFilePath);
                 string xsltPath = Path.Combine(directory, "transform.xsl");
-                string resultPath = Path.Combine(directory, "result.xml");                
+                string resultPath = Path.Combine(directory, "Employees.xml");                
 
                 if (!File.Exists(xsltPath))
                 {
