@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Data;
 using System.IO;
 using System.Windows.Forms;
@@ -8,11 +8,11 @@ using System.Xml.Xsl;
 
 
 namespace TestTask
-{    
+{
     public partial class Form1 : Form
     {
         private string selectedXmlFilePath = "";
-        
+
         public Form1()
         {
             InitializeComponent();
@@ -23,12 +23,12 @@ namespace TestTask
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
-                openFileDialog.Title = "Выберите XML-файл";
+                openFileDialog.Title = "Р’С‹Р±РµСЂРёС‚Рµ XML-С„Р°Р№Р»";
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     selectedXmlFilePath = openFileDialog.FileName;
-                    textBox1.Text = selectedXmlFilePath; // отображаем путь
+                    textBox1.Text = selectedXmlFilePath; // РѕС‚РѕР±СЂР°Р¶Р°РµРј РїСѓС‚СЊ
                 }
             }
 
@@ -38,7 +38,7 @@ namespace TestTask
         {
             if (string.IsNullOrEmpty(selectedXmlFilePath))
             {
-                MessageBox.Show("Сначала выберите XML-файл!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("РЎРЅР°С‡Р°Р»Р° РІС‹Р±РµСЂРёС‚Рµ XML-С„Р°Р№Р»!", "РћС€РёР±РєР°", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -46,15 +46,15 @@ namespace TestTask
             {
                 string directory = Path.GetDirectoryName(selectedXmlFilePath);
                 string xsltPath = Path.Combine(directory, "transform.xsl");
-                string resultPath = Path.Combine(directory, "Employees.xml");                
+                string resultPath = Path.Combine(directory, "Employees.xml");
 
                 if (!File.Exists(xsltPath))
                 {
-                    MessageBox.Show("Файл transform.xsl не найден в той же директории!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Р¤Р°Р№Р» transform.xsl РЅРµ РЅР°Р№РґРµРЅ РІ С‚РѕР№ Р¶Рµ РґРёСЂРµРєС‚РѕСЂРёРё!", "РћС€РёР±РєР°", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                // Применяем XSLT-преобразование
+                // РџСЂРёРјРµРЅСЏРµРј XSLT-РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ
                 XslCompiledTransform xslt = new XslCompiledTransform();
                 xslt.Load(xsltPath);
 
@@ -63,7 +63,7 @@ namespace TestTask
                     xslt.Transform(selectedXmlFilePath, writer);
                 }
 
-                // Загружаем полученный XML и добавляем атрибут total
+                // Р—Р°РіСЂСѓР¶Р°РµРј РїРѕР»СѓС‡РµРЅРЅС‹Р№ XML Рё РґРѕР±Р°РІР»СЏРµРј Р°С‚СЂРёР±СѓС‚ total
                 XDocument doc = XDocument.Load(resultPath);
 
                 var employees = doc.Root?.Elements("Employee");
@@ -79,7 +79,7 @@ namespace TestTask
                             string amountStr = salary.Attribute("amount")?.Value;
                             if (!string.IsNullOrEmpty(amountStr))
                             {
-                                // Заменяем запятую на точку для корректного парсинга
+                                // Р—Р°РјРµРЅСЏРµРј Р·Р°РїСЏС‚СѓСЋ РЅР° С‚РѕС‡РєСѓ РґР»СЏ РєРѕСЂСЂРµРєС‚РЅРѕРіРѕ РїР°СЂСЃРёРЅРіР°
                                 amountStr = amountStr.Trim().Replace(" ", "").Replace(',', '.');
                                 if (decimal.TryParse(amountStr, System.Globalization.NumberStyles.Float,
                                 System.Globalization.CultureInfo.InvariantCulture, out decimal amount))
@@ -89,16 +89,16 @@ namespace TestTask
                             }
                         }
 
-                        // Добавляем атрибут total с суммой
-                        employee.SetAttributeValue("total", total.ToString("0.00").Replace(',', '.'));                        
+                        // Р”РѕР±Р°РІР»СЏРµРј Р°С‚СЂРёР±СѓС‚ total СЃ СЃСѓРјРјРѕР№
+                        employee.SetAttributeValue("total", total.ToString("0.00").Replace(',', '.'));
                     }
                 }
 
-                // Сохраняем обновлённый XML
+                // РЎРѕС…СЂР°РЅСЏРµРј РѕР±РЅРѕРІР»С‘РЅРЅС‹Р№ XML
                 doc.Save(resultPath);
 
 
-                // Отобразим полученный xml в таблице
+                // РћС‚РѕР±СЂР°Р·РёРј РїРѕР»СѓС‡РµРЅРЅС‹Р№ xml РІ С‚Р°Р±Р»РёС†Рµ
 
                 var dataTable = new DataTable();
                 dataTable.Columns.Add("Name", typeof(string));
@@ -106,13 +106,13 @@ namespace TestTask
                 dataTable.Columns.Add("Amount", typeof(decimal));
                 dataTable.Columns.Add("Month", typeof(string));
 
-                // Обходим всех Employee
+                // РћР±С…РѕРґРёРј РІСЃРµС… Employee
                 foreach (var employee in doc.Root?.Elements("Employee") ?? Enumerable.Empty<XElement>())
                 {
                     string name = employee.Attribute("name")?.Value ?? "";
                     string surname = employee.Attribute("surname")?.Value ?? "";
 
-                    // Обходим все salary внутри Employee
+                    // РћР±С…РѕРґРёРј РІСЃРµ salary РІРЅСѓС‚СЂРё Employee
                     foreach (var salary in employee.Elements("salary"))
                     {
                         string amountStr = salary.Attribute("amount")?.Value;
@@ -120,7 +120,7 @@ namespace TestTask
 
                         if (!string.IsNullOrEmpty(amountStr))
                         {
-                            // Нормализуем формат числа
+                            // РќРѕСЂРјР°Р»РёР·СѓРµРј С„РѕСЂРјР°С‚ С‡РёСЃР»Р°
                             amountStr = amountStr.Replace(',', '.');
                             if (decimal.TryParse(amountStr, System.Globalization.NumberStyles.Float,
                                 System.Globalization.CultureInfo.InvariantCulture, out decimal amount))
@@ -131,19 +131,19 @@ namespace TestTask
                     }
                 }
 
-                // Привязываем к DataGrid
+                // РџСЂРёРІСЏР·С‹РІР°РµРј Рє DataGrid
                 dataGridView1.DataSource = dataTable;
 
-                //конец работы с таблицей
+                //РєРѕРЅРµС† СЂР°Р±РѕС‚С‹ СЃ С‚Р°Р±Р»РёС†РµР№
 
 
 
 
-                // добавим атрибут total в исходный файл Data
+                // РґРѕР±Р°РІРёРј Р°С‚СЂРёР±СѓС‚ total РІ РёСЃС…РѕРґРЅС‹Р№ С„Р°Р№Р» Data1
 
                 XDocument doc2 = XDocument.Load(selectedXmlFilePath);
 
-                // Получаем корневой элемент <Pay>
+                // РџРѕР»СѓС‡Р°РµРј РєРѕСЂРЅРµРІРѕР№ СЌР»РµРјРµРЅС‚ <Pay>
                 var pay = doc2.Root;
 
                 if (pay != null && pay.Name.LocalName == "Pay")
@@ -156,7 +156,7 @@ namespace TestTask
                         string amountStr = item.Attribute("amount")?.Value;
                         if (!string.IsNullOrEmpty(amountStr))
                         {
-                            // Заменяем запятую на точку для корректного парсинга
+                            // Р—Р°РјРµРЅСЏРµРј Р·Р°РїСЏС‚СѓСЋ РЅР° С‚РѕС‡РєСѓ РґР»СЏ РєРѕСЂСЂРµРєС‚РЅРѕРіРѕ РїР°СЂСЃРёРЅРіР°
                             amountStr = amountStr.Trim().Replace(" ", "").Replace(',', '.');
                             if (decimal.TryParse(amountStr, System.Globalization.NumberStyles.Float,
                                 System.Globalization.CultureInfo.InvariantCulture, out decimal amount))
@@ -166,23 +166,117 @@ namespace TestTask
                         }
                     }
 
-                    // Добавляем атрибут total с суммой
+                    // Р”РѕР±Р°РІР»СЏРµРј Р°С‚СЂРёР±СѓС‚ total СЃ СЃСѓРјРјРѕР№
                     pay.SetAttributeValue("total", total.ToString("0.00").Replace(',', '.'));
 
-                    // Сохраняем обновлённый XML
+                    // РЎРѕС…СЂР°РЅСЏРµРј РѕР±РЅРѕРІР»С‘РЅРЅС‹Р№ XML
                     doc2.Save(selectedXmlFilePath);
                 }
 
 
-                MessageBox.Show($"Преобразование завершено. Результат сохранён в:\n{resultPath}", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"РџСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ Р·Р°РІРµСЂС€РµРЅРѕ. Р РµР·СѓР»СЊС‚Р°С‚ СЃРѕС…СЂР°РЅС‘РЅ РІ:\n{resultPath}", "РЈСЃРїРµС…", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
 
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Произошла ошибка:\n{ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"РџСЂРѕРёР·РѕС€Р»Р° РѕС€РёР±РєР°:\n{ex.Message}", "РћС€РёР±РєР°", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
+
+        }
+
+        private void buttonAdditem_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(selectedXmlFilePath))
+            {
+                MessageBox.Show("РЎРЅР°С‡Р°Р»Р° РІС‹Р±РµСЂРёС‚Рµ XML-С„Р°Р№Р»!", "РћС€РёР±РєР°", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+
+            // Р’Р°Р»РёРґР°С†РёСЏ РїРѕР»РµР№ С„РѕСЂРјС‹
+
+            if (string.IsNullOrWhiteSpace(textBoxName.Text))
+            {
+                MessageBox.Show("РџРѕР»Рµ 'РРјСЏ' РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј!", "РћС€РёР±РєР° РІРІРѕРґР°", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBoxName.Focus();
+                return;
+            }
+                        
+            if (string.IsNullOrWhiteSpace(textBoxSurname.Text))
+            {
+                MessageBox.Show("РџРѕР»Рµ 'Р¤Р°РјРёР»РёСЏ' РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј!", "РћС€РёР±РєР° РІРІРѕРґР°", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBoxSurname.Focus();
+                return;
+            }
+                      
+            
+            decimal amountValue;
+            if (string.IsNullOrWhiteSpace(textBoxAmount.Text))
+            {
+                MessageBox.Show("РџРѕР»Рµ 'РЎСѓРјРјР°' РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј!", "РћС€РёР±РєР° РІРІРѕРґР°", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBoxAmount.Focus();
+                return;
+            }
+            else if (!decimal.TryParse(
+                textBoxAmount.Text.Replace(',', '.'),
+                System.Globalization.NumberStyles.Float,
+                System.Globalization.CultureInfo.InvariantCulture,
+                out amountValue))
+            {
+                MessageBox.Show("РџРѕР»Рµ 'РЎСѓРјРјР°' РґРѕР»Р¶РЅРѕ СЃРѕРґРµСЂР¶Р°С‚СЊ РєРѕСЂСЂРµРєС‚РЅРѕРµ С‡РёСЃР»Рѕ (РЅР°РїСЂРёРјРµСЂ: 100, 100.50, 100,50).", "РћС€РёР±РєР° РІРІРѕРґР°", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBoxAmount.Focus();
+                return;
+            }
+            else if (amountValue < 0)
+            {
+                MessageBox.Show("РЎСѓРјРјР° РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕР№!", "РћС€РёР±РєР° РІРІРѕРґР°", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBoxAmount.Focus();
+                return;
+            }
+
+            if (listBoxMonth.SelectedItem == null)
+            {
+                MessageBox.Show("Р’С‹Р±РµСЂРёС‚Рµ РјРµСЃСЏС† РёР· СЃРїРёСЃРєР°!");
+                return;
+            }
+
+            try
+            {
+                // Р—Р°РіСЂСѓР¶Р°РµРј XML Рё РґРѕР±Р°РІР»СЏРµРј СЌР»РµРјРµРЅС‚ item
+                XDocument doc2 = XDocument.Load(selectedXmlFilePath);
+
+                // РќР°С…РѕРґРёРј РєРѕСЂРЅРµРІРѕР№ СЌР»РµРјРµРЅС‚ <Pay>
+                var pay = doc2.Root;
+                if (pay == null || pay.Name.LocalName != "Pay")
+                {
+                    MessageBox.Show("РљРѕСЂРЅРµРІРѕР№ СЌР»РµРјРµРЅС‚ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ <Pay>!");
+                    return;
+                }
+
+                // РЎРѕР·РґР°РµРј РЅРѕРІС‹Р№ СЌР»РµРјРµРЅС‚ <item> СЃ Р°С‚СЂРёР±СѓС‚Р°РјРё
+                XElement newItem = new XElement("item",
+                    new XAttribute("name", textBoxName.Text.Trim()),
+                    new XAttribute("surname", textBoxSurname.Text.Trim()),
+                    new XAttribute("amount", textBoxAmount.Text.Trim()),
+                    new XAttribute("mount", listBoxMonth.SelectedItem?.ToString().Replace(',', '.'))
+                );
+
+                // Р”РѕР±Р°РІР»СЏРµРј СЌР»РµРјРµРЅС‚ РІ РєРѕСЂРµРЅСЊ
+                pay.Add(newItem);
+
+
+                // РЎРѕС…СЂР°РЅСЏРµРј С„Р°Р№Р»
+                doc2.Save(selectedXmlFilePath);
+
+                MessageBox.Show("Р­Р»РµРјРµРЅС‚ item СѓСЃРїРµС€РЅРѕ РґРѕР±Р°РІР»РµРЅ!");
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show($"РџСЂРѕРёР·РѕС€Р»Р° РѕС€РёР±РєР°:\n{ex.Message}", "РћС€РёР±РєР°", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
 
         }
     }

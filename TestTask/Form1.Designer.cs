@@ -34,10 +34,10 @@
             dataGridView1 = new DataGridView();
             groupBox1 = new GroupBox();
             buttonAdditem = new Button();
-            listBox1 = new ListBox();
+            listBoxMonth = new ListBox();
             label4 = new Label();
             label3 = new Label();
-            textBox2 = new TextBox();
+            textBoxAmount = new TextBox();
             label2 = new Label();
             textBoxSurname = new TextBox();
             label1 = new Label();
@@ -85,10 +85,10 @@
             // groupBox1
             // 
             groupBox1.Controls.Add(buttonAdditem);
-            groupBox1.Controls.Add(listBox1);
+            groupBox1.Controls.Add(listBoxMonth);
             groupBox1.Controls.Add(label4);
             groupBox1.Controls.Add(label3);
-            groupBox1.Controls.Add(textBox2);
+            groupBox1.Controls.Add(textBoxAmount);
             groupBox1.Controls.Add(label2);
             groupBox1.Controls.Add(textBoxSurname);
             groupBox1.Controls.Add(label1);
@@ -108,15 +108,16 @@
             buttonAdditem.TabIndex = 8;
             buttonAdditem.Text = "Добавить";
             buttonAdditem.UseVisualStyleBackColor = true;
+            buttonAdditem.Click += buttonAdditem_Click;
             // 
-            // listBox1
+            // listBoxMonth
             // 
-            listBox1.FormattingEnabled = true;
-            listBox1.Items.AddRange(new object[] { "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" });
-            listBox1.Location = new Point(7, 225);
-            listBox1.Name = "listBox1";
-            listBox1.Size = new Size(227, 24);
-            listBox1.TabIndex = 7;
+            listBoxMonth.FormattingEnabled = true;
+            listBoxMonth.Items.AddRange(new object[] { "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december" });
+            listBoxMonth.Location = new Point(7, 225);
+            listBoxMonth.Name = "listBoxMonth";
+            listBoxMonth.Size = new Size(227, 24);
+            listBoxMonth.TabIndex = 7;
             // 
             // label4
             // 
@@ -136,12 +137,12 @@
             label3.TabIndex = 5;
             label3.Text = "сумма";
             // 
-            // textBox2
+            // textBoxAmount
             // 
-            textBox2.Location = new Point(6, 163);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(228, 27);
-            textBox2.TabIndex = 4;
+            textBoxAmount.Location = new Point(6, 163);
+            textBoxAmount.Name = "textBoxAmount";
+            textBoxAmount.Size = new Size(228, 27);
+            textBoxAmount.TabIndex = 4;
             // 
             // label2
             // 
@@ -206,9 +207,9 @@
         private Label label1;
         private TextBox textBoxName;
         private Button buttonAdditem;
-        private ListBox listBox1;
+        private ListBox listBoxMonth;
         private Label label4;
         private Label label3;
-        private TextBox textBox2;
+        private TextBox textBoxAmount;
     }
 }
