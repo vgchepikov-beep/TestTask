@@ -6,6 +6,19 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Xsl;
 
+public static class StringExtensions
+{
+    public static string ToFirstUpperRestLower(this string str)
+    {
+        if (string.IsNullOrEmpty(str))
+            return str;
+
+        if (str.Length == 1)
+            return str.ToUpperInvariant();
+
+        return char.ToUpperInvariant(str[0]) + str.Substring(1).ToLowerInvariant();
+    }
+}
 
 namespace TestTask
 {
@@ -13,11 +26,22 @@ namespace TestTask
     {
         private string selectedXmlFilePath = "";
 
+        public static string FirstCharToUpper(string str)
+        {
+            if (string.IsNullOrEmpty(str))
+                return str;
+
+            if (str.Length == 1)
+                return str.ToUpperInvariant();
+
+            return char.ToUpperInvariant(str[0]) + str.Substring(1).ToLowerInvariant();
+        }
+
         public Form1()
         {
             InitializeComponent();
         }
-
+                
         private void button1_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
@@ -188,6 +212,8 @@ namespace TestTask
 
         private void buttonAdditem_Click(object sender, EventArgs e)
         {
+             
+
             if (string.IsNullOrEmpty(selectedXmlFilePath))
             {
                 MessageBox.Show("Сначала выберите XML-файл!", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -255,12 +281,33 @@ namespace TestTask
                     return;
                 }
 
+                string name = textBoxName.Text.Trim();
+                string surname = textBoxSurname.Text.Trim();
+                string month = listBoxMonth.SelectedItem.ToString().Trim(); // на всякий случай
+
+                // Проверяем, существует ли уже элемент с такими же name, surname, mount
+                bool exists = pay.Elements("item").Any(item =>
+                    item.Attribute("name")?.Value.ToLowerInvariant() == name.ToLowerInvariant() &&
+                    item.Attribute("surname")?.Value.ToLowerInvariant() == surname.ToLowerInvariant() &&
+                    item.Attribute("mount")?.Value.ToLowerInvariant() == month.ToLowerInvariant()
+                );
+
+                if (exists)
+                {
+                    MessageBox.Show(
+                        "Элемент с такими Именем, Фамилией и Месяцем уже существует. Добавление отклонено.",
+                        "Дубликат",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                    return;
+                }
+
                 // Создаем новый элемент <item> с атрибутами
                 XElement newItem = new XElement("item",
-                    new XAttribute("name", textBoxName.Text.Trim()),
-                    new XAttribute("surname", textBoxSurname.Text.Trim()),
-                    new XAttribute("amount", textBoxAmount.Text.Trim()),
-                    new XAttribute("mount", listBoxMonth.SelectedItem?.ToString().Replace(',', '.'))
+                    new XAttribute("name", textBoxName.Text.Trim().ToFirstUpperRestLower()),
+                    new XAttribute("surname", textBoxSurname.Text.Trim().ToFirstUpperRestLower()),
+                    new XAttribute("amount", textBoxAmount.Text.Trim().ToString().Replace(',', '.')),
+                    new XAttribute("mount", listBoxMonth.SelectedItem)
                 );
 
                 // Добавляем элемент в корень
