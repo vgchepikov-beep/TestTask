@@ -174,7 +174,7 @@ namespace TestTask
                 {
                     decimal total = 0;
 
-                    var items = pay.Elements("item");
+                    var items = pay.Descendants("item");
                     foreach (var item in items)
                     {
                         string amountStr = item.Attribute("amount")?.Value;
